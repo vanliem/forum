@@ -3,9 +3,11 @@
 namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 trait CreatesApplication
 {
+    use RefreshDatabase;
     /**
      * Creates the application.
      *
@@ -18,5 +20,11 @@ trait CreatesApplication
         $app->make(Kernel::class)->bootstrap();
 
         return $app;
+    }
+
+    public function setUp(){
+        parent::setUp();
+        
+        $this->artisan('db:seed');
     }
 }
