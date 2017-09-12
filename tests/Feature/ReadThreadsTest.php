@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Thread;
 
-class ThreadsTest extends TestCase
+class ReadThreadsTest extends TestCase
 {
 
     public function setUp()
