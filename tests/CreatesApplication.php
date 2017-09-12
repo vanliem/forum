@@ -21,10 +21,4 @@ trait CreatesApplication
 
         return $app;
     }
-
-    public function setUp(){
-        parent::setUp();
-        
-        $this->artisan('db:seed');
-    }
 }
