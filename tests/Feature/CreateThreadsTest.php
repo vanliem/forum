@@ -17,7 +17,8 @@ class CreateThreadsTest extends TestCase
         $this->signedIn();
 
         //When we hit the Endpoint to create a new thread
-        $thread = make('App\Thread');
+        $thread = create('App\Thread');
+        
         $this->post('/threads', $thread->toArray());
 
         //Then, When we visit the thread page, We should see the new thread
