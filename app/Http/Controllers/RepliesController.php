@@ -19,7 +19,6 @@ class RepliesController extends Controller
 		$data = request()->validate([
 			'body' => 'required',			
 		]);
-
 		$data['user_id'] = auth()->id();
 
 		$thread->addReply($data);

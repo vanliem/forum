@@ -14,9 +14,10 @@ class ParticipateInForumTest extends TestCase
      */
     public function unauthenticated_users_may_not_add_replies()
     {
-        $this->expectException('Illuminate\Auth\AuthenticationException');
-
-        $this->post('threads/channel-slug/1/replies', []);
+        $this->withExceptionHandling()
+            ->post('threads/channel-slug/1/replies', [])
+            ->assertStatus(302)
+            ->assertRedirect('/login');
     }
 
     /**
@@ -38,5 +39,17 @@ class ParticipateInForumTest extends TestCase
         //Then their reply should be visible on the page.
         $this->get($thread->path())
             ->assertSee($reply->body);
+    }
+
+    /** @test */
+    public function a_reply_requires_a_body()
+    {
+        $this->withExceptionHandling()->signedIn();
+        $reply = make('App\Reply', ['body' => '']);
+
+        $thread = create('App\Thread');
+
+        return $this->post($thread->path() . '/replies', $reply->toArray())
+            ->assertSessionHasErrors('body');
     }
 }

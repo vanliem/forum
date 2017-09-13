@@ -45,7 +45,7 @@ class ThreadsController extends Controller
         $data = request()->validate([
             'title' => 'required',
             'body' => 'required',
-            'channel_id' => 'required'
+            'channel_id' => 'required|exists:channels,id'
         ]);
         $data['user_id'] = auth()->id();
 
