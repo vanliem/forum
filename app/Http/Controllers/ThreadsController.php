@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Channel;
 use App\Thread;
 use Illuminate\Http\Request;
+use function Psy\debug;
 
 class ThreadsController extends Controller
 {
@@ -12,15 +14,15 @@ class ThreadsController extends Controller
         $this->middleware('auth')
             ->except(['index', 'show']);
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    public function index(Channel $channel)
     {
-        $threads = Thread::latest()->get();
-        
+        if ($channel->exists) {
+            $threads = $channel->threads()->latest()->get();
+        } else {
+            $threads = Thread::latest()->get();
+        }
+
         return view('threads.index', compact('threads'));
     }
 

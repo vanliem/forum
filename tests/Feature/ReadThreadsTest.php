@@ -8,6 +8,8 @@ use App\Thread;
 class ReadThreadsTest extends TestCase
 {
 
+    protected $thread;
+
     public function setUp()
     {
         parent::setUp();
@@ -44,5 +46,14 @@ class ReadThreadsTest extends TestCase
         //Then we should see the replies
     }
 
+    /** @test*/
+    public function a_user_can_filter_threads_according_to_a_channel()
+    {
+        $channel = create('App\Channel');
+        $threadInChannel = create('App\Thread', ['channel_id' => $channel->id]);
+        //$threadNotInChannel = create('App\Channel');
 
+        $this->get('/threads/' . $channel->slug)
+            ->assertSee($threadInChannel->title);
+    }
 }
