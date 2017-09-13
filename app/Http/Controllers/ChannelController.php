@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Thread;
+use App\Channel;
 use Illuminate\Http\Request;
 
-class ThreadsController extends Controller
+class ChannelController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth')
-            ->except(['index', 'show']);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -19,9 +14,7 @@ class ThreadsController extends Controller
      */
     public function index()
     {
-        $threads = Thread::latest()->get();
-        
-        return view('threads.index', compact('threads'));
+        //
     }
 
     /**
@@ -31,7 +24,7 @@ class ThreadsController extends Controller
      */
     public function create()
     {
-        return view('threads.create');
+        //
     }
 
     /**
@@ -42,36 +35,27 @@ class ThreadsController extends Controller
      */
     public function store(Request $request)
     {
-        $data = request()->validate([
-            'title' => 'required',
-            'body' => 'required',
-            'channel_id' => 'required'
-        ]);
-        $data['user_id'] = auth()->id();
-
-        $thread = Thread::create($data);
-
-        return redirect($thread->path());
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Thread  $thread
+     * @param  \App\Channel  $channel
      * @return \Illuminate\Http\Response
      */
-    public function show($channelId, Thread $thread)
+    public function show(Channel $channel)
     {
-        return view('threads/detail', compact('thread'));
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Thread  $thread
+     * @param  \App\Channel  $channel
      * @return \Illuminate\Http\Response
      */
-    public function edit(Thread $thread)
+    public function edit(Channel $channel)
     {
         //
     }
@@ -80,10 +64,10 @@ class ThreadsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Thread  $thread
+     * @param  \App\Channel  $channel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Thread $thread)
+    public function update(Request $request, Channel $channel)
     {
         //
     }
@@ -91,10 +75,10 @@ class ThreadsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Thread  $thread
+     * @param  \App\Channel  $channel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Thread $thread)
+    public function destroy(Channel $channel)
     {
         //
     }

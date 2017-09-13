@@ -16,8 +16,9 @@ class ParticipateInForumTest extends TestCase
     {
         $this->expectException('Illuminate\Auth\AuthenticationException');
 
-        $this->post('threads/1/replies', []);
+        $this->post('threads/channel-slug/1/replies', []);
     }
+
     /**
      * @test
      */
@@ -31,6 +32,7 @@ class ParticipateInForumTest extends TestCase
 
         //When the user adds a rely to the thread
         $reply = factory('App\Reply')->make();
+
         $this->post($thread->path() . '/replies', $reply->toArray());
 
         //Then their reply should be visible on the page.
