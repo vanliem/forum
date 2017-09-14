@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <a href="#">{{ $thread->creator->name }}</a> posted:
@@ -17,18 +17,14 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            @foreach($thread->replies as $reply)
+
+            @foreach($replies as $reply)
                 @include('threads.reply')
             @endforeach
-        </div>
-    </div>
-    @if(auth()->check())
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+
+            {{ $replies->links() }}
+
+            @if(auth()->check())
                 <form action="{{ $thread->path() . '/replies' }}" method="POST" accept-charset="utf-8">
                     {{ csrf_field() }}
                     <div class="form-group">
@@ -36,10 +32,21 @@
                     </div>
                     <button type="submit" class="btn btn-info">Post</button>
                 </form>
+            @else
+                <p class="text-center">Please <a href="{{ route('login') }}" title="login">login</a> to participate in this dicussion</p>
+            @endif
+        </div>
+        <div class="col-md4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p>
+                        This thread was publish {{ $thread->created_at->diffForHumans() }} by
+                        <a href="#">{{ $thread->creator->name }}</a>, and currently
+                        has {{ $thread->replies_count }} {{ str_plural('comment', $thread->replies_count) }}
+                    </p>
+                </div>
             </div>
         </div>
-    @else
-        <p class="text-center">Please <a href="{{ route('login') }}" title="login">login</a> to participate in this dicussion</p>
-    @endif
+    </div>
 </div>
 @endsection
