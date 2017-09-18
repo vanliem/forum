@@ -7,7 +7,10 @@ use App\Scopes\ReplyCountScope;
 
 class Thread extends Model
 {
+    use FavouriteTable;
+    
     protected $guarded = [];
+    protected $with = ['creator', 'channel'];
 
     protected static function boot()
     {
@@ -30,7 +33,7 @@ class Thread extends Model
 
     public function replies()
     {
-    	return $this->hasMany(Reply::class)->withCount('favourites');
+    	return $this->hasMany(Reply::class);
     }
 
     public function creator()
