@@ -26,4 +26,16 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function getRouteKeyName()
+    {
+        parent::getRouteKeyName();
+
+        return 'name';
+    }
+
+    public function threads()
+    {
+        return $this->hasMany(Thread::class);
+    }
 }
