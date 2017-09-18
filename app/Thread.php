@@ -20,6 +20,10 @@ class Thread extends Model
             $builder->withCount('replies');
         });*/
         static::addGlobalScope(new ReplyCountScope);
+
+        static::deleting(function ($thread) {
+            $thread->replies()->delete();
+        });
     }
 
 

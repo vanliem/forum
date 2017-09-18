@@ -76,4 +76,45 @@ class CreateThreadsTest extends TestCase
 
         return $this->post('/threads', $thread->toArray());
     }
+
+    /** @test */
+    public function a_thread_can_be_deleteled()
+    {
+        $this->signedIn();
+        $thread = create('App\Thread');
+        $reply = create('App\Reply', ['thread_id' => $thread->id]);
+
+        $response = $this->json('DELETE', $thread->path());
+        $response->assertStatus(204);
+
+        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+    }
+
+
+    /** @test */
+    public function guests_cannot_delete_threads()
+    {
+        $this->withExceptionHandling();
+        $thread = create('App\Thread');
+        $reply = create('App\Reply', ['thread_id' => $thread->id]);
+
+        $this->delete($thread->path())
+            ->assertRedirect('login');
+
+    }
+
+    /** @test */
+    public function threads_may_only_be_deleted_by_those_who_have_permision()
+    {
+        $this->signedIn();
+        $user = create('App\User');
+
+        $thread = create('App\Thread', ['user_id' => $user->id]);
+        $reply = create('App\Reply', ['thread_id' => $thread->id]);
+
+        $this->delete($thread->path());
+
+    }
 }
+
