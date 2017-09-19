@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Activity;
 use App\Reply;
+use Carbon\Carbon;
 
 class ActivityTest extends TestCase
 {
@@ -45,5 +46,25 @@ class ActivityTest extends TestCase
 		]);
 
 		$this->assertEquals(2, Activity::count());
+	}
+
+
+	/** @test*/
+	public function it_feches_a_feed_for_any_users()
+	{
+		$this->signedIn();
+
+		create('App\Thread', ['user_id' => auth()->id()]);
+		create('App\Thread', [
+			'user_id' => auth()->id(),
+			'created_at' => Carbon::now()->subWeek()
+		]);
+
+		$feed = Activity::feed(auth()->user());
+
+		$this->assertTrue($feed->keys()->contains(
+			Carbon::now()->format('Y-m-d')
+		));
+
 	}
 }
