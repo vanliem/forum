@@ -22,7 +22,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('threads/create', 'ThreadsController@create');
 Route::get('threads/{channel?}', 'ThreadsController@index');
 Route::get('threads/{channel}/{thread}', 'ThreadsController@show');
-Route::get('profiles/{user}', 'ProfilesController@show');
+Route::get('profiles/{user}', 'ProfilesController@show')->name('profiles');
 Route::post('threads/{thread}/replies', 'RepliesController@store');
 Route::post('threads', 'ThreadsController@store');
 Route::delete('threads/{channel}/{thread}', 'ThreadsController@destroy');

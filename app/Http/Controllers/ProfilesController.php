@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Activity;
 
 class ProfilesController extends Controller
 {
@@ -11,7 +12,18 @@ class ProfilesController extends Controller
     {
     	return view('profiles.show', [
     		'user' => $user,
-    		'threads' => $user->threads()->paginate(10)
+    		'activities' => Activity::feed($user)
     	]);
     }
+
+    protected function getActivities($user)
+    {
+    	return $user->activity()
+    		->latest()->with('subject')
+    		->get()
+    		->groupBy(function ($activity) {
+    			return $activity->created_at->format('Y-m-d');
+    		});
+    }
+
 }
