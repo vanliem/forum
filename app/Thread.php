@@ -7,7 +7,7 @@ use App\Scopes\ReplyCountScope;
 
 class Thread extends Model
 {
-    use FavouriteTable;
+    use FavouriteTable, RecordsActivity;
     
     protected $guarded = [];
     protected $with = ['creator', 'channel'];
@@ -16,16 +16,12 @@ class Thread extends Model
     {
         parent::boot();
 
-        /*static::addGlobalScope('replyCount', function ($builder) {
-            $builder->withCount('replies');
-        });*/
         static::addGlobalScope(new ReplyCountScope);
 
         static::deleting(function ($thread) {
             $thread->replies()->delete();
         });
     }
-
 
     public function path($path = null)
     {	
