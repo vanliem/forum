@@ -23,6 +23,7 @@ class RepliesController extends Controller
 
 		$thread->addReply($data);
 
-		return back();
+		return back()
+            ->with('flash', 'Your reply has been left.');
     }
 }
