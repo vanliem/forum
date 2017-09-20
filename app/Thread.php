@@ -19,7 +19,7 @@ class Thread extends Model
         static::addGlobalScope(new ReplyCountScope);
 
         static::deleting(function ($thread) {
-            $thread->replies()->delete();
+            $thread->replies->each->delete();
         });
     }
 
