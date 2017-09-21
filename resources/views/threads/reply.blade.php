@@ -10,14 +10,9 @@
                 </h5>
 
                 <div>
-                    <favourite :reply="{{ $reply }}"></favourite>
-                    <!-- <form action="/replies/{{ $reply->id }}/favourites" method="POST">
-                        {{ csrf_field() }}
-                        <button type="submit" class="btn btn-default" {{ $reply->isFavourited() ? 'disabled' : '' }}>
-                            {{ $reply->favourites_count }}
-                            {{ str_plural('Favourite', $reply->favourites_count) }}
-                        </button>
-                    </form> -->
+                    @if (auth()->check())
+                        <favourite :reply="{{ $reply }}"></favourite>
+                    @endif
                 </div>
             </div>
         </div>

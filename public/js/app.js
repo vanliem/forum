@@ -1940,7 +1940,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	methods: {
 		toggle: function toggle() {
-			return this.active ? this.destroy() : this.create();
+			this.active ? this.destroy() : this.create();
 		},
 		create: function create() {
 			axios.post(this.endpoint);
