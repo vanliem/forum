@@ -108,18 +108,5 @@ class CreateThreadsTest extends TestCase
         $this->signedIn();
         $this->delete($thread->path())->assertStatus(403);
     }
-
-    /** @test */
-    public function threads_may_only_be_deleted_by_those_who_have_permision()
-    {
-        $this->signedIn();
-        $user = create('App\User');
-
-        $thread = create('App\Thread', ['user_id' => $user->id]);
-        $reply = create('App\Reply', ['thread_id' => $thread->id]);
-
-        $this->delete($thread->path());
-
-    }
 }
 
