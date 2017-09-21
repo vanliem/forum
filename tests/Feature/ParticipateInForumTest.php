@@ -68,6 +68,18 @@ class ParticipateInForumTest extends TestCase
     }
 
     /** @test */
+    public function unauthorized_user_can_not_update_reply()
+    {
+        $this->withExceptionHandling();
+        $reply = create('App\Reply');
+        $change = [
+            'body' => 'Body changed'
+        ];
+        $this->patch("/replies/{$reply->id}", $change)
+            ->assertRedirect('/login');
+    }
+
+    /** @test */
     public function authorized_user_can_delete_reply()
     {
         $this->signedIn();
@@ -75,5 +87,19 @@ class ParticipateInForumTest extends TestCase
 
         $this->delete("/replies/{$reply->id}");
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+    }
+
+    /** @test */
+    public function authorized_user_can_update_reply()
+    {
+        $this->signedIn();
+
+        $reply = create('App\Reply', ['user_id' => auth()->id()]);
+        $change = [
+            'body' => 'Body changed'
+        ];
+
+        $this->patch("/replies/{$reply->id}", $change);
+        $this->assertDatabaseHas('replies', $change);
     }
 }
