@@ -4,10 +4,6 @@
 			<span class="flex">
 	        	{{ $heading }}
 			</span>
-
-			<span>
-				{{-- {{ $thread->created_at->diffForHumans() }} --}}
-			</span>
 		</div>
 	</div>
 
