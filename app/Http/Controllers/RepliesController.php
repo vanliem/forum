@@ -32,6 +32,19 @@ class RepliesController extends Controller
     	$this->authorize('delete', $reply);
     	$reply->delete();
 
-    	return back();
+    	return back()->with('flash', 'Your reply has been deleted.');
+    }
+
+    public function update(Reply $reply)
+    {
+    	$this->authorize('update', $reply);
+
+    	$data = request()->validate([
+    		'body' => 'required',
+    	]);
+    	
+    	$reply->update($data);
+
+    	//return back()->with('flash', 'Your reply has been deleted.');
     }
 }
