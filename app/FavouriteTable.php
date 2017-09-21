@@ -30,4 +30,16 @@ trait FavouriteTable
     {
         return $this->favourites->count();
     }
+
+    public function unfavourite()
+    {
+        $attributes['user_id'] = auth()->id();
+
+        $this->favourites()->where($attributes)->delete();
+    }
+
+    public function getIsFavouritedAttribute()
+    {
+        return $this->isFavourited();
+    }
 }
