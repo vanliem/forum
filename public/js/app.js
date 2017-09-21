@@ -1983,7 +1983,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.editing = !this.editing;
 
-            flash('Update successfully!');
+            flash('Update successfully.');
+        },
+        destroy: function destroy() {
+            axios.delete('/replies/' + this.attributes.id);
+
+            $(this.$el).fadeOut(300, function () {
+                flash('Your reply has been deleted successfully.');
+            });
         }
     }
 });
