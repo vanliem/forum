@@ -5,6 +5,14 @@ use Illuminate\Database\Eloquent\Model;
 
 trait FavouriteTable
 {
+
+    protected static function bootFavouriteTable()
+    {
+        static::deleting(function ($model) {
+            $model->favourites->each->delete();
+        });
+    }
+
 	public function favourites()
     {
         return $this->morphMany(Favourite::class, 'favourite');
@@ -35,7 +43,12 @@ trait FavouriteTable
     {
         $attributes['user_id'] = auth()->id();
 
-        $this->favourites()->where($attributes)->delete();
+        $this->favourites()
+            ->where($attributes)
+            ->get()
+            ->each(function ($favourite) {
+                $favourite->delete();
+            });
     }
 
     public function getIsFavouritedAttribute()
