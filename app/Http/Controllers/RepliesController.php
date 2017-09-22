@@ -21,7 +21,11 @@ class RepliesController extends Controller
 		]);
 		$data['user_id'] = auth()->id();
 
-		$thread->addReply($data);
+		$reply = $thread->addReply($data);
+
+        if (request()->expectsJson()) {
+            return $reply->load('owner');
+        }
 
 		return back()
             ->with('flash', 'Your reply has been left.');

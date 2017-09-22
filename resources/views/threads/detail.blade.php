@@ -27,19 +27,12 @@
                         </div>
                     </div>
                     
-                    <replies :data="{{ $thread->replies }}" @removed="repliesCount--"></replies>
+                    <replies :data="{{ $thread->replies }}" 
+                        @removed="repliesCount--"
+                        @added="repliesCount++">
+                    </replies>
 
-                    @if(auth()->check())
-                        <form action="{{ $thread->path() . '/replies' }}" method="POST" accept-charset="utf-8">
-                            {{ csrf_field() }}
-                            <div class="form-group">
-                                <textarea name="body" id="body" class="form-control" placeholder="Have somethong to say ?" rows="5"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-info">Post</button>
-                        </form>
-                    @else
-                        <p class="text-center">Please <a href="{{ route('login') }}" title="login">login</a> to participate in this dicussion</p>
-                    @endif
+                    {{-- Reply component --}}
                 </div>
                 <div class="col-md-4">
                     <div class="panel panel-default">
