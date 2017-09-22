@@ -31,8 +31,6 @@
                         @removed="repliesCount--"
                         @added="repliesCount++">
                     </replies>
-
-                    {{-- Reply component --}}
                 </div>
                 <div class="col-md-4">
                     <div class="panel panel-default">

@@ -23,6 +23,7 @@ Route::get('threads/create', 'ThreadsController@create');
 Route::get('threads/{channel?}', 'ThreadsController@index');
 Route::get('threads/{channel}/{thread}', 'ThreadsController@show');
 Route::get('profiles/{user}', 'ProfilesController@show')->name('profiles');
+Route::get('/threads/{channel}/{thread}/replies', 'RepliesController@index');
 
 Route::post('threads/{thread}/replies', 'RepliesController@store');
 Route::post('threads', 'ThreadsController@store');
