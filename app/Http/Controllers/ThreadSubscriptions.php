@@ -14,7 +14,11 @@ class ThreadSubscriptions extends Controller
 
     public function store($channelId, Thread $thread)
     {
-        dd('a');
         $thread->subscribe();
+    }
+
+    public function destroy($channelId, Thread $thread)
+    {
+        $thread->unsubscribe();
     }
 }
