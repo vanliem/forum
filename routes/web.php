@@ -24,6 +24,7 @@ Route::get('threads/{channel?}', 'ThreadsController@index');
 Route::get('threads/{channel}/{thread}', 'ThreadsController@show');
 Route::get('profiles/{user}', 'ProfilesController@show')->name('profiles');
 Route::get('/threads/{channel}/{thread}/replies', 'RepliesController@index');
+Route::get('/profiles/{user}/notifications', 'UserNotificationsController@index');
 
 Route::post('threads/{thread}/replies', 'RepliesController@store');
 Route::post('threads', 'ThreadsController@store');
@@ -37,3 +38,4 @@ Route::delete('threads/{channel}/{thread}', 'ThreadsController@destroy');
 Route::delete('replies/{reply}', 'RepliesController@destroy');
 Route::delete('/replies/{reply}/favourites', 'FavouritesController@destroy');
 Route::delete('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptions@destroy');
+Route::delete('/profiles/{user}/notifications/{notification}', 'UserNotificationsController@destroy');
