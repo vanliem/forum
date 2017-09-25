@@ -29,6 +29,7 @@ Route::post('threads/{thread}/replies', 'RepliesController@store');
 Route::post('threads', 'ThreadsController@store');
 Route::post('/replies/{reply}/favourites', 'FavouritesController@store');
 Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
+Route::post('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptions@store');
 
 Route::patch('replies/{reply}', 'RepliesController@update');
 
