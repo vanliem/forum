@@ -25,20 +25,19 @@ class ParticipateInForumTest extends TestCase
      */
     public function an_authenticated_user_may_participate_in_forum_threads()
     {
-        //Give We have an authenticated user
         $this->be($user = factory('App\User')->create());
         
-        // Have a existing thread
         $thread = factory('App\Thread')->create();
 
-        //When the user adds a rely to the thread
         $reply = factory('App\Reply')->make();
 
         $this->post($thread->path() . '/replies', $reply->toArray());
-
-        //Then their reply should be visible on the page.
-        $this->get($thread->path())
-            ->assertSee($reply->body);
+        
+        $this->assertDatabaseHas('replies', ['body' => $reply->body]);
+        $this->assertEquals(1, $thread->fresh()->replies_count);
+        
+        /*$this->get($thread->path())
+            ->assertSee($reply->body);*/
     }
 
     /** @test */
@@ -87,6 +86,7 @@ class ParticipateInForumTest extends TestCase
 
         $this->delete("/replies/{$reply->id}");
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+        $this->assertEquals(0, $reply->thread->fresh()->replies_count);
     }
 
     /** @test */
