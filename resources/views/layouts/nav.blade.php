@@ -26,15 +26,11 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('/threads') }}">All Threads</a></li>
-
-                        @if (auth()->check())
-                            <li>
-                                <a href="{{ url('/threads/?by=' . auth()->user()->name) }}">{{ auth()->user()->name }}</a>
-                            </li>
-                        @endif
-
                         <li>
                             <a href="/threads/?popular=1">Popular Threads</a>
+                        </li>
+                        <li>
+                            <a href="/threads/?unanswered=1">Unanswered Threads</a>
                         </li>
                     </ul>
                 </li>
