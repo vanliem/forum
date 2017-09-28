@@ -102,4 +102,22 @@ class ParticipateInForumTest extends TestCase
         $this->patch("/replies/{$reply->id}", $change);
         $this->assertDatabaseHas('replies', $change);
     }
+
+    /** @test */
+    public function replies_that_contain_spam_may_not_be_created()
+    {
+        $this->withoutExceptionHandling();
+        $this->signedIn();
+
+        $thread = create('App\Thread');
+
+        $reply = make('App\Reply', [
+            'body' => 'spam text'
+        ]);
+
+        $this->expectException(\Exception::class);
+
+        $this->post($thread->path() . '/replies', $reply->toArray());
+
+    }
 }

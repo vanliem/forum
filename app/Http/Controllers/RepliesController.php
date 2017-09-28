@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+use App\Spam;
 use Illuminate\Http\Request;
 use App\Thread;
 use App\Reply;
@@ -20,14 +21,16 @@ class RepliesController extends Controller
         return $thread->replies()->paginate(1);
     }
 
-    public function store($channelId, Thread $thread)
+    public function store($channelId, Thread $thread, Spam $spam)
     {
 		$data = request()->validate([
 			'body' => 'required',			
 		]);
-		$data['user_id'] = auth()->id();
+        $spam->detect($data['body']);
 
-		$reply = $thread->addReply($data);
+        $data['user_id'] = auth()->id();
+
+        $reply = $thread->addReply($data);
 
         if (request()->expectsJson()) {
             return $reply->load('owner');
