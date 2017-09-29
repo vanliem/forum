@@ -72,21 +72,24 @@
             update() {
                 axios.patch('/replies/' + this.data.id, {
                     body: this.body
+                })
+                .catch(error => {
+                    flash(
+                        error.response.data ? error.response.data : 'Error',
+                        'danger'
+                    );
+                }).then(({}) => {
+                    this.editing = !this.editing;
+
+                    flash('Update successfully.');
                 });
 
-                this.editing = ! this.editing;
-
-                flash('Update successfully.');
             },
 
             destroy() {
                 axios.delete('/replies/' + this.data.id);
                 
                 this.$emit('deleted', this.data.id);
-                
-                /*$(this.$el).fadeOut(300, () => {
-                    flash('Your reply has been deleted successfully.');
-                });*/
             }
         }        
     }
