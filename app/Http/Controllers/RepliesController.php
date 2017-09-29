@@ -21,12 +21,9 @@ class RepliesController extends Controller
         return $thread->replies()->paginate(1);
     }
 
-    public function store($channelId, Thread $thread, Spam $spam)
+    public function store($channelId, Thread $thread)
     {
-		$data = request()->validate([
-			'body' => 'required',			
-		]);
-        $spam->detect($data['body']);
+		$data = $this->validateReply();
 
         $data['user_id'] = auth()->id();
 
@@ -56,12 +53,19 @@ class RepliesController extends Controller
     {
     	$this->authorize('update', $reply);
 
-    	$data = request()->validate([
-    		'body' => 'required',
-    	]);
-    	
-    	$reply->update($data);
+    	$data = $this->validateReply();
 
-    	//return back()->with('flash', 'Your reply has been deleted.');
+    	$reply->update($data);
+    }
+
+    protected function validateReply()
+    {
+        $data = request()->validate([
+            'body' => 'required',
+        ]);
+
+        resolve(Spam::class)->detect($data['body']);
+
+        return $data;
     }
 }
