@@ -23,18 +23,25 @@ class RepliesController extends Controller
 
     public function store($channelId, Thread $thread)
     {
-		$data = $this->validateReply();
+        try {
+            $data = $this->validateReply();
 
-        $data['user_id'] = auth()->id();
+            $data['user_id'] = auth()->id();
 
-        $reply = $thread->addReply($data);
+            $reply = $thread->addReply($data);
 
-        if (request()->expectsJson()) {
             return $reply->load('owner');
+
+            /*if (request()->expectsJson()) {
+                return $reply->load('owner');
+            }
+
+            return back()
+                ->with('flash', 'Your reply has been left.');*/
+        } catch(\Exception $e) {
+            return response('Your reply is spam', 422);
         }
 
-		return back()
-            ->with('flash', 'Your reply has been left.');
     }
 
     public function destroy(Reply $reply)
@@ -53,9 +60,13 @@ class RepliesController extends Controller
     {
     	$this->authorize('update', $reply);
 
-    	$data = $this->validateReply();
+        try {
+            $data = $this->validateReply();
 
-    	$reply->update($data);
+            $reply->update($data);
+        } catch(\Exception $e) {
+            return response('Your reply is spam', 422);
+        }
     }
 
     protected function validateReply()
