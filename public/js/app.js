@@ -59330,7 +59330,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			axios.post(location.pathname + '/replies', {
 				body: this.body
 			}).catch(function (error) {
-				flash(error.response.data ? error.response.data : 'Error', 'danger');
+				flash(error.response.data, 'danger');
 			}).then(function (_ref) {
 				var data = _ref.data;
 

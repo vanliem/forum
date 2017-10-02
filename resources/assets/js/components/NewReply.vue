@@ -39,7 +39,7 @@
 				})
 				.catch(error => {
                     flash(
-                        error.response.data ? error.response.data : 'Error',
+                        error.response.data,
 						'danger'
 					);
 				})
