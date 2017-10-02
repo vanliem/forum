@@ -11,7 +11,5 @@ npm-debug.log
 yarn-error.log
 .env
 .idea
-public/css
-public/js
-public/fonts
+public/*
 package-lock.json
