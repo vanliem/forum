@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Events\ThreadHasNewReply;
+use App\Events\ThreadReceivedNewReply;
 use Illuminate\Database\Eloquent\Model;
 use App\Scopes\ReplyCountScope;
 use App\Notifications\ThreadWasUpdated;
@@ -50,20 +51,9 @@ class Thread extends Model
     {
         $reply = $this->replies()->create($reply);
 
-        //cach 1
-        event(new ThreadHasNewReply($this, $reply));
-
-        //cach 2
-        //$this->notifySubscriber($reply);
+        event(new ThreadReceivedNewReply($reply));
 
         return $reply;
-    }
-
-    protected function notifySubscriber($reply)
-    {
-        $this->subscriptions
-            ->where('user_id', '!=', $reply->user_id)
-            ->each->notify($reply);
     }
 
     public function channel()
