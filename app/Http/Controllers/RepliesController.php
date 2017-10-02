@@ -8,6 +8,7 @@ use App\Rules\SpamFree;
 use Illuminate\Http\Request;
 use App\Thread;
 use App\Reply;
+use Illuminate\Support\Facades\Gate;
 
 class RepliesController extends Controller
 {
@@ -24,7 +25,16 @@ class RepliesController extends Controller
 
     public function store($channelId, Thread $thread)
     {
+        if (Gate::denies('create', new Reply)) {
+            return response(
+                'You are posting too frequently, Please take a break!',
+                429
+            );
+        }
+
         try {
+            $this->authorize('create', new Reply);
+
             $data = request()->validate([
                 'body' => [
                     'required',
@@ -38,21 +48,18 @@ class RepliesController extends Controller
 
             return $reply->load('owner');
 
-            /*if (request()->expectsJson()) {
-                return $reply->load('owner');
-            }
-
-            return back()
-                ->with('flash', 'Your reply has been left.');*/
         } catch(\Exception $e) {
-            return response('Your reply is spam', 422);
+            return response(
+                'Your reply is spam',
+                422
+            );
         }
-
     }
 
     public function destroy(Reply $reply)
     {
     	$this->authorize('delete', $reply);
+
     	$reply->delete();
 
         if (request()->wantsJson()) {

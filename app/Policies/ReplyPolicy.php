@@ -26,11 +26,17 @@ class ReplyPolicy
      * Determine whether the user can create replies.
      *
      * @param  \App\User  $user
+     * @param  \App\Reply  $reply
      * @return mixed
      */
-    public function create(User $user)
+    public function create(User $user, Reply $reply)
     {
-        //
+        $lastReply = $user->fresh()->lastReply;
+
+        return ! $lastReply || ! $lastReply->wasJustPublished();
+
+        /*if (! $lastReply) return true;
+        return ! $lastReply->wasJustPublished();*/
     }
 
     /**
