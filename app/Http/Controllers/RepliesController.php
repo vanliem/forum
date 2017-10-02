@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+use App\Http\Forms\CreatePostForm;
 use App\Inspections\Spam;
 use App\Rules\SpamFree;
 use Illuminate\Http\Request;
@@ -23,37 +24,13 @@ class RepliesController extends Controller
         return $thread->replies()->paginate(1);
     }
 
-    public function store($channelId, Thread $thread)
+    public function store($channelId, Thread $thread, CreatePostForm $form)
     {
-        if (Gate::denies('create', new Reply)) {
-            return response(
-                'You are posting too frequently, Please take a break!',
-                429
-            );
-        }
-
-        try {
-            $this->authorize('create', new Reply);
-
-            $data = request()->validate([
-                'body' => [
-                    'required',
-                    new SpamFree
-                ]
-            ]);
-
-            $data['user_id'] = auth()->id();
-
-            $reply = $thread->addReply($data);
-
-            return $reply->load('owner');
-
-        } catch(\Exception $e) {
-            return response(
-                'Your reply is spam',
-                422
-            );
-        }
+        return $thread->addReply([
+            'body' => request('body'),
+            'user_id' => auth()->id()
+        ])
+        ->load('owner');
     }
 
     public function destroy(Reply $reply)

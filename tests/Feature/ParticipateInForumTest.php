@@ -48,7 +48,7 @@ class ParticipateInForumTest extends TestCase
 
         $thread = create('App\Thread');
 
-        return $this->post($thread->path() . '/replies', $reply->toArray())
+        return $this->json('post', $thread->path() . '/replies', $reply->toArray())
             ->assertStatus(422);
     }
 
@@ -106,21 +106,24 @@ class ParticipateInForumTest extends TestCase
     /** @test */
     public function replies_that_contain_spam_may_not_be_created()
     {
+        $this->withExceptionHandling();
+
         $this->signedIn();
 
         $thread = create('App\Thread');
-
         $reply = make('App\Reply', [
             'body' => 'spam text'
         ]);
 
-        $this->post($thread->path() . '/replies', $reply->toArray())
+        $this->json('post', $thread->path() . '/replies', $reply->toArray())
             ->assertStatus(422);
     }
 
     /** @test */
     public function users_may_only_reply_a_maximum_of_once_per_minute()
     {
+        //$this->withExceptionHandling();
+
         $this->signedIn();
 
         $thread = create('App\Thread');
