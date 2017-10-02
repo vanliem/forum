@@ -48694,7 +48694,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v(" Cancel")])])]) : _c('div', {
     domProps: {
-      "textContent": _vm._s(_vm.body)
+      "innerHTML": _vm._s(_vm.body)
     }
   })])])]), _vm._v(" "), (_vm.canDelete) ? _c('div', {
     staticClass: "panel-footer level"
