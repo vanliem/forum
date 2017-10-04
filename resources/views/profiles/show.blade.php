@@ -10,6 +10,17 @@
 						<small>Since {{ $user->created_at->diffForHumans() }}</small>
 					</h1>
 				</div>
+				@can('update', $user)
+                    <form method="POST" action="{{ route('avatar', $user) }}" enctype="multipart/form-data">
+                        {{ csrf_field() }}
+
+                        <input type="file" name="avatar">
+
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+				@endcan
+
+                <img src="{{ asset('storage/' . $user->avatar_path) }}" alt="" width="50" height="50"/>
 
 				@forelse ($activities as $date => $activity)
 					<h3 class="page-header">

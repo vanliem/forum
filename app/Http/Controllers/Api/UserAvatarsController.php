@@ -10,7 +10,7 @@ class UserAvatarsController extends Controller
 {
     public function store($user)
     {
-        $data = request()->validate([
+        request()->validate([
             'avatar' => [
                 'required',
                 'image'
