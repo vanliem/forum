@@ -12,7 +12,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <div class="level">
-                                <img src="{{ asset('storage/' . $thread->creator->avatar()) }}"
+                                <img src="{{ $thread->creator->avatar_path }}"
                                      alt="{{ $thread->creator->name }}"
                                      height="25" width="25"
                                      class="mr-1"
