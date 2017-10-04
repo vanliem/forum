@@ -7,6 +7,7 @@ use App\Filters\ThreadFilters;
 use App\Rules\SpamFree;
 use App\Thread;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class ThreadsController extends Controller
 {
@@ -28,7 +29,13 @@ class ThreadsController extends Controller
         if (request()->wantsJson()) {
             return $threads;
         }
-        return view('threads.index', compact('threads'));
+
+        $trending = collect(Redis::zrevrange('trending_threads', 0, -1))
+            ->map(function ($thread) {
+                return json_decode($thread);
+            });
+
+        return view('threads.index', compact('threads', 'trending'));
     }
 
     /**
@@ -59,7 +66,7 @@ class ThreadsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -83,7 +90,7 @@ class ThreadsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Thread  $thread
+     * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
     public function show($channelId, Thread $thread)
@@ -91,13 +98,21 @@ class ThreadsController extends Controller
         if (auth()->check()) {
             auth()->user()->read($thread);
         }
+
+        Redis::zincrby(
+            'trending_threads', 1,
+            json_encode([
+                'title' => $thread->title,
+                'path' => $thread->path()
+            ]));
+
         return view('threads/detail', compact('thread'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Thread  $thread
+     * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
     public function edit(Thread $thread)
@@ -108,8 +123,8 @@ class ThreadsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Thread  $thread
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Thread $thread)
@@ -120,7 +135,7 @@ class ThreadsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Thread  $thread
+     * @param  \App\Thread $thread
      * @return \Illuminate\Http\Response
      */
     public function destroy($channel, Thread $thread)
@@ -129,10 +144,10 @@ class ThreadsController extends Controller
         $thread->delete();
 
         if (request()->wantsJson()) {
-            return response([], 204);    
+            return response([], 204);
         }
 
         return redirect('/threads');
-        
+
     }
 }
