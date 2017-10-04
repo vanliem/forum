@@ -32,6 +32,7 @@ Route::post('threads', 'ThreadsController@store');
 Route::post('/replies/{reply}/favourites', 'FavouritesController@store');
 Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
 Route::post('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptions@store');
+Route::post('api/users/{user}/avatar', 'Api\UserAvatarsController@store')->middleware('auth');
 
 Route::patch('replies/{reply}', 'RepliesController@update');
 
