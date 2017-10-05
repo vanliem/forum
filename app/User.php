@@ -19,6 +19,10 @@ class User extends Authenticatable
         'name', 'email', 'password', 'avatar_path'
     ];
 
+    protected $casts = [
+        'confirmed' => 'boolean'
+    ];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -70,5 +74,12 @@ class User extends Authenticatable
         }
 
         return asset('/images/avatars/default.png');
+    }
+
+    public function confirm()
+    {
+        $this->confirmed = true;
+
+        $this->save();
     }
 }
