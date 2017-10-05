@@ -7,10 +7,11 @@ use App\Events\ThreadReceivedNewReply;
 use Illuminate\Database\Eloquent\Model;
 use App\Scopes\ReplyCountScope;
 use App\Notifications\ThreadWasUpdated;
+use Illuminate\Support\Facades\Redis;
 
 class Thread extends Model
 {
-    use FavouriteTable, RecordsActivity;
+    use RecordsActivity, RecordVisits;
     
     protected $guarded = [];
 

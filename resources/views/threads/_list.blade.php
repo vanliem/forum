@@ -28,6 +28,9 @@
             </div>
             <hr>
         </div>
+        <div class="panel-footer">
+            {{ $thread->visits() }} {{ str_plural('visit', $thread->visits()) }}
+        </div>
     </div>
 @empty
     <p>
