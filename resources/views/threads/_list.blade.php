@@ -29,7 +29,7 @@
             <hr>
         </div>
         <div class="panel-footer">
-            {{ $thread->visits() }} {{ str_plural('visit', $thread->visits()) }}
+            {{ $thread->visits()->count() }} {{ str_plural('visit', $thread->visits()->count()) }}
         </div>
     </div>
 @empty
