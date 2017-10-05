@@ -105,5 +105,13 @@ class CreateThreadsTest extends TestCase
         $this->signedIn();
         $this->delete($thread->path())->assertStatus(403);
     }
+
+    /** @test */
+    public function authenticated_users_must_first_confirm_their_email_address_before_creating_threads()
+    {
+        $this->publishThread()
+            ->assertRedirect('/threads')
+            ->assertSessionHas('flash', 'You are not authorized');
+    }
 }
 
