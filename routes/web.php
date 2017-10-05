@@ -28,7 +28,7 @@ Route::get('/profiles/{user}/notifications', 'UserNotificationsController@index'
 Route::get('/api/users', 'Api\UsersController@index');
 
 Route::post('threads/{thread}/replies', 'RepliesController@store');
-Route::post('threads', 'ThreadsController@store');
+Route::post('threads', 'ThreadsController@store')->middleware('must-be-confirmed');
 Route::post('/replies/{reply}/favourites', 'FavouritesController@store');
 Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
 Route::post('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptions@store');
