@@ -15,7 +15,7 @@ class RedirectIfEmailNotConfirmed
      */
     public function handle($request, Closure $next)
     {
-        if (!$request->user()->confirm) {
+        if (!$request->user()->confirmed) {
             return redirect('/threads')->with('flash', 'You are not authorized');
         }
 

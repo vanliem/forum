@@ -11,7 +11,7 @@ class PleaseConfirmYourEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $user;
+    public $user;
 
     public function __construct($user)
     {
