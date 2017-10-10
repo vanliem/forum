@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Thread;
 use App\Activity;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -121,6 +122,24 @@ class CreateThreadsTest extends TestCase
         $this->post(route('threads.store'), $thread->toArray())
             ->assertRedirect(route('threads.index'))
             ->assertSessionHas('flash', 'You are not authorized');
+    }
+
+    /** @test */
+    public function a_thread_requires_a_unique_slug()
+    {
+        $this->signedIn();
+
+        $thread = create('App\Thread', ['title' => 'test unique', 'slug' => 'test-unique']);
+
+        $this->assertEquals($thread->fresh()->slug, 'test-unique');
+
+        $this->post(route('threads.store'), $thread->toArray());
+
+        $this->assertTrue(Thread::whereSlug('test-unique-2')->exists());
+
+        $this->post(route('threads.store'), $thread->toArray());
+
+        $this->assertTrue(Thread::whereSlug('test-unique-3')->exists());
     }
 }
 
