@@ -74,7 +74,7 @@ class ThreadsController extends Controller
         ]);
 
         $data['user_id'] = auth()->id();
-        $data['slug'] = str_slug($data['title']);
+        $data['slug'] = $data['title'];
 
         $thread = Thread::create($data);
 
