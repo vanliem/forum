@@ -74,10 +74,12 @@ class ThreadsController extends Controller
         ]);
 
         $data['user_id'] = auth()->id();
-        $data['slug'] = $data['title'];
 
         $thread = Thread::create($data);
 
+        if (request()->wantsJson()) {
+            return response($thread, 201);
+        }
         return redirect($thread->path())->with('flash', 'Your thread has been published!');
     }
 
