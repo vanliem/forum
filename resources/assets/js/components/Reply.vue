@@ -1,5 +1,5 @@
 <template>
-    <div :id="'reply-' + id " class="panel panel-default">
+    <div :id="'reply-' + id " :class="classes">
         <div class="panel-heading">
             <div class="level">
                 <h5 class="flex">
@@ -32,9 +32,13 @@
             </div>
         </div>
 
-        <div class="panel-footer level" v-if="canDelete">
-            <button class="btn btn-xs mr-1" @click="editing = true">Edit</button>
-            <button class="btn btn-danger btn-xs mr-1" @click="destroy">Delete</button>
+        <div class="panel-footer level">
+            <div v-if="authorize('updateReply', reply)">
+                <button class="btn btn-xs mr-1" @click="editing = true">Edit</button>
+                <button class="btn btn-danger btn-xs mr-1" @click="destroy">Delete</button>
+            </div>
+
+            <button class="btn btn-default btn-xs ml-a" @click="markBestReply" v-if="! isBest">Best Reply</button>
         </div>
 
     </div>
@@ -52,22 +56,20 @@
             return {
                 id: this.data.id,
                 body: this.data.body,
-                editing: false
+                editing: false,
+                isBest: false,
+                reply: this.data
             };
         },
 
         computed: {
-            signedIn() {
-                return window.App.signedIn;
-            },
-
             ago() {
                 return moment(this.data.created_at).fromNow() + '...';
             },
 
-            canDelete() {
-                return this.authorize(user => this.data.user_id == user.id);
-            }
+            classes() {
+                return ['panel', this.isBest ? 'panel-success' : 'panel-default'];
+            },
         },
 
         methods: {
@@ -92,6 +94,12 @@
                 axios.delete('/replies/' + this.data.id);
                 
                 this.$emit('deleted', this.data.id);
+            },
+
+            markBestReply() {
+                this.isBest = ! this.isBest;
+
+                axios.post('/replies/' + this.data.id + '/best');
             }
         }        
     }
