@@ -35,6 +35,7 @@ Route::post('/replies/{reply}/favourites', 'FavouritesController@store');
 Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
 Route::post('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptions@store');
 Route::post('api/users/{user}/avatar', 'Api\UserAvatarsController@store')->middleware('auth')->name('avatar');
+Route::post('/replies/{reply}/best', 'BestRepliesController@store')->name('best-replies.store');
 
 Route::patch('replies/{reply}', 'RepliesController@update');
 
