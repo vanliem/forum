@@ -27,7 +27,7 @@ Vue.prototype.authorize = function (...params) {
 };
 
 
-Vue.prototype.signedIn = window.App.signedIn();
+Vue.prototype.signedIn = window.App.signedIn;
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
