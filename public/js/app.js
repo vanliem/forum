@@ -26749,7 +26749,7 @@ Vue.prototype.authorize = function () {
   return params[0](window.App.user);
 };
 
-Vue.prototype.signedIn = window.App.signedIn();
+Vue.prototype.signedIn = window.App.signedIn;
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -58973,7 +58973,7 @@ function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("
             id: this.data.id,
             body: this.data.body,
             editing: false,
-            isBest: false,
+            thread: window.thread,
             reply: this.data
         };
     },
@@ -58983,8 +58983,8 @@ function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("
         ago: function ago() {
             return __WEBPACK_IMPORTED_MODULE_1_moment___default()(this.data.created_at).fromNow() + '...';
         },
-        classes: function classes() {
-            return ['panel', this.isBest ? 'panel-success' : 'panel-default'];
+        isBest: function isBest() {
+            return this.thread.best_reply_id == this.id;
         }
     },
 
@@ -59010,9 +59010,9 @@ function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("
             this.$emit('deleted', this.data.id);
         },
         markBestReply: function markBestReply() {
-            this.isBest = !this.isBest;
-
             axios.post('/replies/' + this.data.id + '/best');
+
+            this.thread.best_reply_id = this.id;
         }
     }
 });
@@ -59407,128 +59407,136 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { class: _vm.classes, attrs: { id: "reply-" + _vm.id } }, [
-    _c("div", { staticClass: "panel-heading" }, [
-      _c("div", { staticClass: "level" }, [
-        _c("h5", { staticClass: "flex" }, [
-          _c("a", {
-            attrs: { href: "/profiles/" + _vm.data.owner.name },
-            domProps: { textContent: _vm._s(_vm.data.owner.name) }
-          }),
-          _vm._v(" said ...\n                "),
-          _c("span", { domProps: { textContent: _vm._s(_vm.ago) } })
-        ]),
+  return _c(
+    "div",
+    {
+      staticClass: "panel",
+      class: _vm.isBest ? " panel-success" : " panel-default",
+      attrs: { id: "reply-" + _vm.id }
+    },
+    [
+      _c("div", { staticClass: "panel-heading" }, [
+        _c("div", { staticClass: "level" }, [
+          _c("h5", { staticClass: "flex" }, [
+            _c("a", {
+              attrs: { href: "/profiles/" + _vm.data.owner.name },
+              domProps: { textContent: _vm._s(_vm.data.owner.name) }
+            }),
+            _vm._v(" said ...\n                "),
+            _c("span", { domProps: { textContent: _vm._s(_vm.ago) } })
+          ]),
+          _vm._v(" "),
+          _vm.signedIn
+            ? _c("div", [_c("favourite", { attrs: { reply: _vm.data } })], 1)
+            : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "panel panel-default" }, [
+        _c("div", { staticClass: "panel-body" }, [
+          _c("div", { staticClass: "body" }, [
+            _vm.editing
+              ? _c("div", [
+                  _c(
+                    "form",
+                    {
+                      on: {
+                        submit: function($event) {
+                          $event.preventDefault()
+                          _vm.update($event)
+                        }
+                      }
+                    },
+                    [
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.body,
+                              expression: "body"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: { required: "required" },
+                          domProps: { value: _vm.body },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.body = $event.target.value
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("button", { staticClass: "btn btn-xs btn-primary" }, [
+                        _vm._v("Update")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-link btn-xs",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              _vm.editing = false
+                            }
+                          }
+                        },
+                        [_vm._v(" Cancel")]
+                      )
+                    ]
+                  )
+                ])
+              : _c("div", { domProps: { innerHTML: _vm._s(_vm.body) } })
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "panel-footer level" }, [
+        _vm.authorize("updateReply", _vm.reply)
+          ? _c("div", [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-xs mr-1",
+                  on: {
+                    click: function($event) {
+                      _vm.editing = true
+                    }
+                  }
+                },
+                [_vm._v("Edit")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger btn-xs mr-1",
+                  on: { click: _vm.destroy }
+                },
+                [_vm._v("Delete")]
+              )
+            ])
+          : _vm._e(),
         _vm._v(" "),
-        _vm.signedIn
-          ? _c("div", [_c("favourite", { attrs: { reply: _vm.data } })], 1)
+        !_vm.isBest
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn-default btn-xs ml-a",
+                on: { click: _vm.markBestReply }
+              },
+              [_vm._v("Best Reply")]
+            )
           : _vm._e()
       ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "panel panel-default" }, [
-      _c("div", { staticClass: "panel-body" }, [
-        _c("div", { staticClass: "body" }, [
-          _vm.editing
-            ? _c("div", [
-                _c(
-                  "form",
-                  {
-                    on: {
-                      submit: function($event) {
-                        $event.preventDefault()
-                        _vm.update($event)
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("textarea", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.body,
-                            expression: "body"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { required: "required" },
-                        domProps: { value: _vm.body },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.body = $event.target.value
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("button", { staticClass: "btn btn-xs btn-primary" }, [
-                      _vm._v("Update")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-link btn-xs",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            _vm.editing = false
-                          }
-                        }
-                      },
-                      [_vm._v(" Cancel")]
-                    )
-                  ]
-                )
-              ])
-            : _c("div", { domProps: { innerHTML: _vm._s(_vm.body) } })
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "panel-footer level" }, [
-      _vm.authorize("updateReply", _vm.reply)
-        ? _c("div", [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-xs mr-1",
-                on: {
-                  click: function($event) {
-                    _vm.editing = true
-                  }
-                }
-              },
-              [_vm._v("Edit")]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-danger btn-xs mr-1",
-                on: { click: _vm.destroy }
-              },
-              [_vm._v("Delete")]
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      !_vm.isBest
-        ? _c(
-            "button",
-            {
-              staticClass: "btn btn-default btn-xs ml-a",
-              on: { click: _vm.markBestReply }
-            },
-            [_vm._v("Best Reply")]
-          )
-        : _vm._e()
-    ])
-  ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
