@@ -1,5 +1,5 @@
 <template>
-    <div :id="'reply-' + id " :class="classes">
+    <div :id="'reply-' + id " class="panel" :class="isBest ? ' panel-success' : ' panel-default'">
         <div class="panel-heading">
             <div class="level">
                 <h5 class="flex">
@@ -57,7 +57,7 @@
                 id: this.data.id,
                 body: this.data.body,
                 editing: false,
-                isBest: false,
+                thread: window.thread,
                 reply: this.data
             };
         },
@@ -67,9 +67,9 @@
                 return moment(this.data.created_at).fromNow() + '...';
             },
 
-            classes() {
-                return ['panel', this.isBest ? 'panel-success' : 'panel-default'];
-            },
+            isBest() {
+                return this.thread.best_reply_id == this.id;
+            }
         },
 
         methods: {
@@ -97,9 +97,9 @@
             },
 
             markBestReply() {
-                this.isBest = ! this.isBest;
-
                 axios.post('/replies/' + this.data.id + '/best');
+
+                this.thread.best_reply_id = this.id;
             }
         }        
     }
