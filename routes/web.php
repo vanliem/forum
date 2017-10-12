@@ -40,7 +40,7 @@ Route::post('/replies/{reply}/best', 'BestRepliesController@store')->name('best-
 Route::patch('replies/{reply}', 'RepliesController@update');
 
 Route::delete('threads/{channel}/{thread}', 'ThreadsController@destroy');
-Route::delete('replies/{reply}', 'RepliesController@destroy');
+Route::delete('replies/{reply}', 'RepliesController@destroy')->name('replies.destroy');
 Route::delete('/replies/{reply}/favourites', 'FavouritesController@destroy');
 Route::delete('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptions@destroy');
 Route::delete('/profiles/{user}/notifications/{notification}', 'UserNotificationsController@destroy');
