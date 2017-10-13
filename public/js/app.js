@@ -57559,6 +57559,14 @@ var user = window.App.user;
 module.exports = {
     updateReply: function updateReply(reply) {
         return reply.owner.id === user.id;
+    },
+    updateThread: function updateThread(thread) {
+        return thread.user.id === user.id;
+    },
+    own: function own(model) {
+        var prop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'user_id';
+
+        return model[prop] === user.id;
     }
 };
 
@@ -58959,29 +58967,31 @@ function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("
 //
 //
 //
+//
+//
+//
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['data'],
+    props: ['reply'],
 
     components: { Favourite: __WEBPACK_IMPORTED_MODULE_0__Favourite_vue___default.a },
 
     data: function data() {
         return {
-            id: this.data.id,
-            body: this.data.body,
+            id: this.id,
+            body: this.reply.body,
             editing: false,
-            thread: window.thread,
-            reply: this.data
+            thread: window.thread
         };
     },
 
 
     computed: {
         ago: function ago() {
-            return __WEBPACK_IMPORTED_MODULE_1_moment___default()(this.data.created_at).fromNow() + '...';
+            return __WEBPACK_IMPORTED_MODULE_1_moment___default()(this.reply.created_at).fromNow() + '...';
         },
         isBest: function isBest() {
             return this.thread.best_reply_id == this.id;
@@ -58992,7 +59002,7 @@ function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("
         update: function update() {
             var _this = this;
 
-            axios.patch('/replies/' + this.data.id, {
+            axios.patch('/replies/' + this.id, {
                 body: this.body
             }).catch(function (error) {
                 flash(error.response.data ? error.response.data : 'Error', 'danger');
@@ -59005,12 +59015,12 @@ function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError("
             });
         },
         destroy: function destroy() {
-            axios.delete('/replies/' + this.data.id);
+            axios.delete('/replies/' + this.id);
 
-            this.$emit('deleted', this.data.id);
+            this.$emit('deleted', this.id);
         },
         markBestReply: function markBestReply() {
-            axios.post('/replies/' + this.data.id + '/best');
+            axios.post('/replies/' + this.id + '/best');
 
             this.thread.best_reply_id = this.id;
         }
@@ -59419,15 +59429,15 @@ var render = function() {
         _c("div", { staticClass: "level" }, [
           _c("h5", { staticClass: "flex" }, [
             _c("a", {
-              attrs: { href: "/profiles/" + _vm.data.owner.name },
-              domProps: { textContent: _vm._s(_vm.data.owner.name) }
+              attrs: { href: "/profiles/" + _vm.reply.owner.name },
+              domProps: { textContent: _vm._s(_vm.reply.owner.name) }
             }),
             _vm._v(" said ...\n                "),
             _c("span", { domProps: { textContent: _vm._s(_vm.ago) } })
           ]),
           _vm._v(" "),
           _vm.signedIn
-            ? _c("div", [_c("favourite", { attrs: { reply: _vm.data } })], 1)
+            ? _c("div", [_c("favourite", { attrs: { reply: _vm.reply } })], 1)
             : _vm._e()
         ])
       ]),
@@ -59498,7 +59508,7 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "panel-footer level" }, [
-        _vm.authorize("updateReply", _vm.reply)
+        _vm.authorize("own", _vm.reply)
           ? _c("div", [
               _c(
                 "button",
@@ -59524,14 +59534,14 @@ var render = function() {
             ])
           : _vm._e(),
         _vm._v(" "),
-        !_vm.isBest
+        _vm.authorize("own", _vm.reply)
           ? _c(
               "button",
               {
                 staticClass: "btn btn-default btn-xs ml-a",
                 on: { click: _vm.markBestReply }
               },
-              [_vm._v("Best Reply")]
+              [_vm._v("\n            Best Reply?\n        ")]
             )
           : _vm._e()
       ])
@@ -61447,7 +61457,7 @@ var render = function() {
           { key: reply.id },
           [
             _c("reply", {
-              attrs: { data: reply },
+              attrs: { reply: reply },
               on: {
                 deleted: function($event) {
                   _vm.remove(index)
