@@ -37,6 +37,10 @@ Route::post('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptions@st
 Route::post('api/users/{user}/avatar', 'Api\UserAvatarsController@store')->middleware('auth')->name('avatar');
 Route::post('/replies/{reply}/best', 'BestRepliesController@store')->name('best-replies.store');
 
+Route::post('lock-thread/{thread}', 'LockThreadsController@store')
+    ->name('lock-threads.store')
+    ->middleware('admin');
+
 Route::patch('replies/{reply}', 'RepliesController@update');
 
 Route::delete('threads/{channel}/{thread}', 'ThreadsController@destroy');
