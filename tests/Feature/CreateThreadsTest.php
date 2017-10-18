@@ -10,9 +10,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CreateThreadsTest extends TestCase
 {
     use RefreshDatabase;
-    /**
-     * @test
-     */
+
+    /** @test*/
     public function a_user_can_create_new_forum_threads()
     {
         $this->signedIn();
@@ -26,9 +25,7 @@ class CreateThreadsTest extends TestCase
             ->assertSee($thread->body);
     }
 
-    /**
-     * @test
-     */
+    /** @test */
     public function guest_may_not_create_threads()
     {
         $thread = make('App\Thread');
@@ -40,7 +37,6 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-
     public function a_thread_requires_a_title()
     {
         $this->publishThread(['title' => null])
@@ -49,7 +45,6 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-
     public function a_thread_requires_a_body()
     {
         $this->publishThread(['body' => null])
@@ -99,7 +94,7 @@ class CreateThreadsTest extends TestCase
     {
         $this->withExceptionHandling();
         $thread = create('App\Thread');
-        $reply = create('App\Reply', ['thread_id' => $thread->id]);
+        create('App\Reply', ['thread_id' => $thread->id]);
 
         $this->delete($thread->path())
             ->assertRedirect('login');

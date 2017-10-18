@@ -14,6 +14,7 @@ $factory->define(App\Thread::class, function (Faker $faker) {
         },
        'channel_id' => function () {
        		return factory('App\Channel')->create()->id;
-       }
+       },
+        'locked' => false
     ];
 });
