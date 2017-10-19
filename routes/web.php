@@ -48,3 +48,6 @@ Route::delete('replies/{reply}', 'RepliesController@destroy')->name('replies.des
 Route::delete('/replies/{reply}/favourites', 'FavouritesController@destroy');
 Route::delete('/threads/{channel}/{thread}/subscriptions', 'ThreadSubscriptions@destroy');
 Route::delete('/profiles/{user}/notifications/{notification}', 'UserNotificationsController@destroy');
+Route::delete('lock-thread/{thread}', 'LockThreadsController@destroy')
+    ->name('lock-threads.destroy')
+    ->middleware('admin');
