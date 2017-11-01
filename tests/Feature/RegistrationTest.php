@@ -14,7 +14,7 @@ class RegistrationTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function a_confirmation_email_is_sent_upon_registration()
+    function a_confirmation_email_is_sent_upon_registration()
     {
         Mail::fake();
 
@@ -25,7 +25,7 @@ class RegistrationTest extends TestCase
             'password_confirmation' => '123456789'
         ]);
 
-        Mail::assertSent(PleaseConfirmYourEmail::class);
+        Mail::assertQueued(PleaseConfirmYourEmail::class);
     }
 
     /** @test */
